@@ -1,0 +1,57 @@
+@Service
+public class StudentService {
+    @Autowired
+    private StudentMapper studentMapper;
+
+    public void addStudent(StudentDTO studentDTO) {
+        List<String> errors = new ArrayList<>();
+
+        // Kiểm tra email đã tồn tại
+        if (studentMapper.existsByEmail(studentDTO.getEmail())) {
+            errors.add("Email already exists!");
+        }
+
+        // Kiểm tra tuổi
+        if (studentDTO.getAge() < 18) {
+            errors.add("Student must be at least 18 years old!");
+        }
+
+        // Kiểm tra tên không rỗng
+        if (studentDTO.getName().trim().isEmpty()) {
+            errors.add("Name cannot be empty!");
+        }
+
+        // Nếu có lỗi, throw exception chứa danh sách lỗi
+        if (!errors.isEmpty()) {
+            throw new ValidationException(errors);
+        }
+
+        // Nếu không có lỗi, tiếp tục lưu vào database
+        studentMapper.insertStudent(studentDTO);
+    }
+}
+
+
+
+public class ValidationException extends RuntimeException {
+    private List<String> errors;
+
+    public ValidationException(List<String> errors) {
+        super("Validation failed");
+        this.errors = errors;
+    }
+
+    public List<String> getErrors() {
+        return errors;
+    }
+}
+
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(ValidationException.class)
+    public String handleValidationException(ValidationException ex, Model model) {
+        model.addAttribute("errorMessages", ex.getErrors()); // Truyền danh sách lỗi vào Model
+        return "student-form"; // Quay lại form
+    }
+}
