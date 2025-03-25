@@ -4,24 +4,24 @@ public class StudentService {
     private StudentMapper studentMapper;
 
     public void addStudent(StudentDTO studentDTO) {
-        List<String> errors = new ArrayList<>();
+        Map<String, String> errors = new HashMap<>();
 
         // Kiểm tra email đã tồn tại
         if (studentMapper.existsByEmail(studentDTO.getEmail())) {
-            errors.add("Email already exists!");
+            errors.put("email", "Email already exists!");
         }
 
         // Kiểm tra tuổi
         if (studentDTO.getAge() < 18) {
-            errors.add("Student must be at least 18 years old!");
+            errors.put("age", "Student must be at least 18 years old!");
         }
 
         // Kiểm tra tên không rỗng
         if (studentDTO.getName().trim().isEmpty()) {
-            errors.add("Name cannot be empty!");
+            errors.put("name", "Name cannot be empty!");
         }
 
-        // Nếu có lỗi, throw exception chứa danh sách lỗi
+        // Nếu có lỗi, throw exception chứa danh sách lỗi theo từng field
         if (!errors.isEmpty()) {
             throw new ValidationException(errors);
         }
@@ -33,25 +33,75 @@ public class StudentService {
 
 
 
-public class ValidationException extends RuntimeException {
-    private List<String> errors;
 
-    public ValidationException(List<String> errors) {
+public class ValidationException extends RuntimeException {
+    private Map<String, String> errors;
+
+    public ValidationException(Map<String, String> errors) {
         super("Validation failed");
         this.errors = errors;
     }
 
-    public List<String> getErrors() {
+    public Map<String, String> getErrors() {
         return errors;
     }
 }
+
 
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(ValidationException.class)
     public String handleValidationException(ValidationException ex, Model model) {
-        model.addAttribute("errorMessages", ex.getErrors()); // Truyền danh sách lỗi vào Model
+        model.addAttribute("errorMap", ex.getErrors()); // Đưa lỗi vào Model
         return "student-form"; // Quay lại form
     }
 }
+
+@Controller
+@RequestMapping("/students")
+public class StudentController {
+    @Autowired
+    private StudentService studentService;
+
+    @GetMapping("/new")
+    public String showForm(Model model) {
+        model.addAttribute("studentDTO", new StudentDTO());
+        return "student-form";
+    }
+
+    @PostMapping("/save")
+    public String saveStudent(@ModelAttribute("studentDTO") StudentDTO studentDTO, Model model) {
+        studentService.addStudent(studentDTO); // Nếu lỗi, sẽ throw exception và tự động bắt ở @ControllerAdvice
+        return "redirect:/students";
+    }
+}
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Student</title>
+</head>
+<body>
+    <h2>Add Student</h2>
+
+    <form action="/students/save" method="post" th:object="${studentDTO}">
+        <label>Name:</label>
+        <input type="text" th:field="*{name}" required>
+        <span style="color: red;" th:if="${errorMap != null and errorMap['name']}" th:text="${errorMap['name']}"></span>
+        <br>
+
+        <label>Age:</label>
+        <input type="number" th:field="*{age}" required>
+        <span style="color: red;" th:if="${errorMap != null and errorMap['age']}" th:text="${errorMap['age']}"></span>
+        <br>
+
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" required>
+        <span style="color: red;" th:if="${errorMap != null and errorMap['email']}" th:text="${errorMap['email']}"></span>
+        <br>
+
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>
