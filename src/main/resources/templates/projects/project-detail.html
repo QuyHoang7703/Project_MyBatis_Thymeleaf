@@ -7,11 +7,11 @@
 
 </head>
 <body>
-  <div class="container border p-3 mt-3" th:object="${project}">
+  <div class="container border p-3 mt-3" th:object="${projectResponseDTO}">
     <h2>Detail project</h2>
     <form th:action="@{/projects/update}" method="post">
       <label class="form-label" for="projectId" >Project ID</label>
-      <input type="text" class="form-control" id="projectId" th:field="*{projectId}">
+      <input type="text" class="form-control" id="projectId" th:field="*{projectId}" readonly>
 
       <label class="form-label" for="projectName">Project Name</label>
       <input type="text" class="form-control" id="projectName" th:field="*{projectName}">
@@ -20,11 +20,11 @@
       <input type="text" class="form-control" id="difficulty" th:field="*{difficulty}">
 
       <label for="department" class="form-label">Department</label>
-      <select name="departmentId" id="department" class="form-select" th:object="${departments}">
+      <select name="deptId" id="department" class="form-select" th:object="${departments}">
         <option th:each="department : ${departments}"
-                th:value="${department.departmentId}"
-                th:text="${department.departmentName}"
-                th:selected="${department.departmentId == project.department?.departmentId}">
+                th:value="${department.deptId}"
+                th:text="${department.deptNM}"
+                th:selected="${department.deptId == projectResponseDTO.deptId}">
         </option>
       </select>
 

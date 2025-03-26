@@ -3,18 +3,18 @@ package com.example.Project_MyBatis.model;
 import java.time.LocalDate;
 
 public class Project {
-    private String projectId;
+    private int projectId;
     private String projectName;
     private String difficulty;
     private LocalDate startDate;
     private LocalDate updateDate;
     private Department department;
 
-    public String getProjectId() {
+    public int getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(String projectId) {
+    public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
 

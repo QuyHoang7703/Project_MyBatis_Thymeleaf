@@ -5,18 +5,19 @@ import com.example.Project_MyBatis.model.Department;
 import java.time.LocalDate;
 
 public class ProjectResponseDTO {
-    private String projectId;
+    private int projectId;
     private String projectName;
     private String difficulty;
     private LocalDate startDate;
     private LocalDate updateDate;
+    private int deptId;
     private String deptNM;
 
-    public String getProjectId() {
+    public int getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(String projectId) {
+    public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
 
@@ -58,5 +59,13 @@ public class ProjectResponseDTO {
 
     public void setUpdateDate(LocalDate updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public int getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(int deptId) {
+        this.deptId = deptId;
     }
 }
