@@ -14,3 +14,17 @@ CREATE TABLE project (
      deptId INT,
      FOREIGN KEY (deptId) REFERENCES department(deptId)
 );
+
+CREATE TABLE roles (
+       roleId INT AUTO_INCREMENT PRIMARY KEY,
+       roleName VARCHAR(30)
+
+);
+
+CREATE TABLE users (
+       username VARCHAR(50) PRIMARY KEY,
+       password VARCHAR(100) NOT NULL,
+       roleId INT NOT NULL,
+
+       CONSTRAINT FK_User_Role FOREIGN KEY(roleId) REFERENCES Roles(roleId)
+);

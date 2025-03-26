@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Log4j
 public class ProjectService {
     private final ProjectMapper projectMapper;
     private final DepartmentMapper departmentMapper;

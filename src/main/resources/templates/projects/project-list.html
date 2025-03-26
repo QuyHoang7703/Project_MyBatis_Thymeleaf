@@ -56,12 +56,15 @@
 <!--              </li>-->
 <!--          </ul>-->
           <div class="d-flex gap-2">
-              <a th:href="@{/projects/add}" class="btn btn-success p-2 ms-auto">Register</a>
+              <a th:href="@{/projects/add-project-form}" class="btn btn-success p-2 ms-auto">Register</a>
               <button class="btn-warning p-2">Logout</button>
           </div>
       </form>
       <!-- Nhúng Fragment từ notification.html -->
       <div th:insert="~{fragments/notification :: toastFragment(${errorMessage}, ${successMessage})}"></div>
+      <form th:action="@{/logout}" method="post">
+          <button type="submit" class="btn btn-danger">Logout</button>
+      </form>
 
   </div>
     <!-- Option 1: Bootstrap Bundle with Popper -->

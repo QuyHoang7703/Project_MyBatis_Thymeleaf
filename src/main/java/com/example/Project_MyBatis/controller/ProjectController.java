@@ -16,7 +16,6 @@ import java.util.List;
 
 @Controller
 @RequestMapping("projects")
-@Log4j
 public class ProjectController {
     private final ProjectService projectService;
     private final DepartmentService departmentService;
