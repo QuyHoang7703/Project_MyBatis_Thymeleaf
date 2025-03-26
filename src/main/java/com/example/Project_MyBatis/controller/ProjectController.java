@@ -1,6 +1,7 @@
 package com.example.Project_MyBatis.controller;
 
-import com.example.Project_MyBatis.dto.ProjectDTO;
+import com.example.Project_MyBatis.dto.ProjectRequestDTO;
+import com.example.Project_MyBatis.dto.ProjectResponseDTO;
 import com.example.Project_MyBatis.model.Department;
 import com.example.Project_MyBatis.model.Project;
 import com.example.Project_MyBatis.service.DepartmentService;
@@ -27,18 +28,27 @@ public class ProjectController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping
+    @GetMapping("/add-project-form")
     public String showAddProjectForm(Model model) {
         System.out.println(">>>>>>>");
-        model.addAttribute("projectDTO", new ProjectDTO());
+        model.addAttribute("projectDTO", new ProjectRequestDTO());
         List<Department> departments = departmentService.getAllDepartments();
         model.addAttribute("departments", departments);
         return "projects/add-project";
     }
 
     @PostMapping("/add")
-    public String addProject(@ModelAttribute("projectDTO") ProjectDTO projectDTO) {
-        projectService.createProject(projectDTO);
+    public String addProject(@ModelAttribute("projectDTO") ProjectRequestDTO projectRequestDTO) {
+        projectService.createProject(projectRequestDTO);
         return "complete-form";
     }
+
+    @GetMapping()
+    public String showAllProjects(Model model) {
+        List<ProjectResponseDTO> projectResponseDTOS = projectService.getAllProjects();
+        model.addAttribute("projectResponseDTOS", projectResponseDTOS);
+        return "projects/project-list";
+    }
+
+
 }

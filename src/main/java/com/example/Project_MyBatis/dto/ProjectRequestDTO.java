@@ -2,7 +2,7 @@ package com.example.Project_MyBatis.dto;
 
 import java.time.LocalDate;
 
-public class ProjectDTO {
+public class ProjectRequestDTO {
     private String projectId;
     private String projectName;
     private String difficulty;
